@@ -159,12 +159,18 @@ def read_env(path: Path) -> dict[str, str]:
 def write_config_yaml(data: dict[str, str]) -> None:
     """Write a minimal config.yaml so hermes picks up the model and provider."""
     model = data.get("LLM_MODEL", "")
+    has_gemini = bool(data.get("GEMINI_API_KEY"))
     config_path = Path(HERMES_HOME) / "config.yaml"
     config_path.parent.mkdir(parents=True, exist_ok=True)
     config_path.write_text(f"""\
 model:
   default: "{model}"
-  provider: "auto"
+  provider: "deepseek"
+
+auxiliary:
+  vision:
+    provider: "google"
+    model: "gemini-2.0-flash-001"
 
 terminal:
   backend: "local"
